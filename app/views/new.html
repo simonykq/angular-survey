@@ -1,0 +1,40 @@
+<h2>New survey</h2>
+
+<form name="surveyForm" role="form" novalidate>
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control error" id="title" ng-model="data.title" name="title" required />
+        <div ng-if="surveyForm.$dirty" ng-messages="surveyForm.title.$error">
+            <div class="error-text" ng-message="required">is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" class="form-control error" ng-model="data.description" name="description" minlength="100"></textarea>
+        <div ng-if="surveyForm.$dirty" ng-messages="surveyForm.description.$error">
+            <div class="error-text" ng-message="minlength">must be more than 100 characters</div>
+        </div>
+    </div>
+    <survey-field field="field" count="{{$index + 1}}" copy="copyField" delete="deleteField" ng-repeat="field in data.fields" >
+        <survey-field-options ng-if="hasOption(field.type)" ></survey-field-options>
+    </survey-field>
+    <br />
+    <button class="btn btn-info" ng-click="addField(data.fields)">Add field</button>
+    <br />
+    <br />
+    <button type="submit" class="btn-lg btn-primary" ng-click="submitForm(surveyForm, data)">Submit</button>
+    <button class="btn-lg btn-danger" ng-click="clearForm(surveyForm, data)" >Clear</button>
+    <br />
+    <a class="btn-lg pull-right" href="/">Back</a>
+</form>
+<!--<ng-form name="nestedField" class="input-group" ng-repeat="field in data.fields">-->
+    <!--<div ng-if="nestedField.$dirty" ng-messages="nestedField.$error">-->
+        <!--<div ng-message="required">Fields are required</div>-->
+    <!--</div>-->
+    <!--<input type="text" ng-model="field.question" placeholder="Ask your questions" required />-->
+    <!--<select ng-model="field.type" ng-options="type for type in inputTypes" required>-->
+        <!--<option value="">Select the type of input</option>-->
+    <!--</select>-->
+    <!--<a class="btn btn-info input-group-addon" ng-click="copyField(field, data.fields)">Copy</a>-->
+    <!--<a class="btn btn-danger input-group-addon" ng-click="deleteField(field, data.fields)">Delete</a>-->
+<!--</ng-form>-->

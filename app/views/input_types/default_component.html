@@ -1,0 +1,6 @@
+<div class="row">
+  <div class="col-md-8" ng-switch="field.type">
+    <input ng-switch-when="number" type="{{field.type}}" name="{{key}}" class="form-control error success" ng-model="answer.content" max="{{field.maxlength}}" min="{{field.minlength}}" ng-required="field.required" />
+    <input ng-switch-default type="{{field.type}}" name="{{key}}" class="form-control error success" ng-model="answer.content" ng-maxlength="field.maxlength" ng-minlength="field.minlength" ng-required="field.required" />
+  </div>
+</div>
