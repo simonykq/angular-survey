@@ -36,6 +36,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "start": "grunt serve:dist",
+    "test": "grunt test",
+    "postinstall": "bower install"
   }
 }
