@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="surveyApp">
+  <body>
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -32,11 +32,7 @@
       <div ng-view="">
       </div>
 
-      <!--<div class="footer">-->
-        <!--<p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>-->
-      <!--</div>-->
     </div>
-
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
@@ -88,6 +84,31 @@
         <script src="scripts/directives/lazy_load.js"></script>
         <script src="scripts/directives/waiting.js"></script>
         <script src="scripts/directives/survey_date_picker.js"></script>
+        <script src="scripts/directives/testing.js"></script>
         <!-- endbuild -->
+
+    <script>
+        window.onload = function(){
+          var $rootElement = angular.element($('body')),
+              modules      = [
+                'ng',
+                'surveyApp',
+                function($provide){
+                  $provide.value('$rootElement', $rootElement)
+                }
+              ],
+              $injector = angular.injector(modules),
+              $compile  = $injector.get('$compile');
+
+          var compositeLinkFn = $compile($rootElement);
+
+          var $rootScope = $injector.get('$rootScope');
+
+          compositeLinkFn($rootScope);
+
+          $rootScope.$apply();
+
+        }
+    </script>
 </body>
 </html>
