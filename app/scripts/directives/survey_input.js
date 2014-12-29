@@ -107,7 +107,6 @@ module
 
 module
   .controller('SurveyInputController', function($scope){
-    console.log($scope.field);
 
     //this is only used for date component and for some reason, the pop up doesnt show without this
     $scope.open = function($event) {
