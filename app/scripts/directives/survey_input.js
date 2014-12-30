@@ -120,7 +120,7 @@ angular.forEach(DIRECTIVE_TYPES, function(type){
   module.directive(camelCase(component_name), function(){
     return {
       restrict: 'E',
-      //replace: true,
+      replace: true,
       templateUrl: 'views/input_types/' + type + '_component.html'
     }
   });
