@@ -105,25 +105,12 @@ module
     };
   });
 
-module
-  .controller('SurveyInputController', function($scope){
-
-    //this is only used for date component and for some reason, the pop up doesnt show without this
-    $scope.open = function($event) {
-      $event.preventDefault();
-      $event.stopPropagation();
-
-      $scope.opened = !$scope.opened;
-    };
-
-  });
 
 module
   .directive('surveyDefaultComponent', function(){
     return {
       restrict: 'E',
       replace: true,
-      controller: 'SurveyInputController',
       templateUrl: 'views/input_types/default_component.html'
     }
   });
@@ -134,7 +121,6 @@ angular.forEach(DIRECTIVE_TYPES, function(type){
     return {
       restrict: 'E',
       //replace: true,
-      controller: 'SurveyInputController',
       templateUrl: 'views/input_types/' + type + '_component.html'
     }
   });

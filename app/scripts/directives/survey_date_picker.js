@@ -7,7 +7,7 @@
  * # surveyDatePicker
  */
 angular.module('surveyApp')
-  .directive('surveyDatePicker', function ($filter, $parse) {
+  .directive('surveyDatePicker', function ($compile, $filter, $parse) {
     return {
       templateUrl: 'views/_survey_date_picker.html',
       replace: true,
@@ -18,15 +18,34 @@ angular.module('surveyApp')
         options: '='
       },
       require: '?ngModel',
-      controller: function($scope){
-          $scope.opened = false;
+      controller: function($scope, $element, $position){
+          $scope.isOpen = false;
           //this is only used for date component and for some reason, the pop up doesnt show without this
           $scope.open = function($event) {
               $event.preventDefault();
               $event.stopPropagation();
 
-              $scope.opened = !$scope.opened;
+              $scope.isOpen = !$scope.isOpen;
           };
+
+          $scope.$watch('isOpen',function(value){
+
+              var ele = $element.next();
+              if(value){
+                  $scope.position =  $position.position($element);
+                  $scope.position.top = $scope.position.top + $element.prop('offsetHeight');
+                  ele.bind('click', handler);
+              } else {
+                  ele.unbind('click', handler);
+              }
+          });
+
+          var handler = function(event){
+              event.preventDefault();
+              $scope.$apply(function(){
+                  $scope.isOpen = false;
+              });
+          }
       },
       link: function postLink(scope, element, attrs, ctrl) {
         if(!ctrl) return;
@@ -42,12 +61,14 @@ angular.module('surveyApp')
           setter(scope, newVale);
         });
         scope.$watch('dateValue', function(newValue){
-          ngModelCtrl.$setViewValue(newValue);
+            ngModelCtrl.$setViewValue(newValue);
+            ngModelCtrl.$render();
         });
 
         ngModelCtrl.$render = function(){
-           var formatedDate = $filter('date')(format,ngModelCtrl.$viewValue);
-           element.find('input').text(formatedDate);
+           var formatedDate = $filter('date')(ngModelCtrl.$viewValue, format);
+           console.log(formatedDate);
+           element.find('input').val(formatedDate);
         };
 
         attrs.$observe('format', function(value){
@@ -65,11 +86,6 @@ angular.module('surveyApp')
 
         angular.forEach(scope.options,function(value, option){
           datepickerEl.attr( cameltoDash(option), value );
-        });
-
-        scope.$watch('opened',function(newValue){
-          var ele = element.find('#calendar-popup');
-          newValue ? ele.show() : ele.hide();
         });
 
         var $popup = $compile(popupEl)(scope);
