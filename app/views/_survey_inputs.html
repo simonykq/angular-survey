@@ -10,6 +10,8 @@
         </label>
         <!--date picker component -->
         <survey-date-picker ng-switch-when="date" format="yyyy/MM/dd" options="{formatYear: 'yy',startingDay: 1}" name="{{key}}" ng-model="answer.content" ng-required="field.required"></survey-date-picker>
+        <!--time picker component-->
+        <timepicker ng-switch-when="time" class="form-control error success" ng-model="answer.content" name="{{key}}" ng-required="field.required" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
         <!--datetime picker component-->
         <div ng-switch-when="datetime" class="dropdown">
             <a class="dropdown-toggle" id="my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
@@ -24,8 +26,6 @@
                 <datetimepicker ng-model="answer.content" data-datetimepicker-config="{ dropdownSelector: '#my-toggle-select' }"></datetimepicker>
             </ul>
         </div>
-        <!--time picker component-->
-        <timepicker ng-switch-when="time" class="form-control error success" ng-model="answer.content" name="{{key}}" ng-required="field.required" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
         <!--day component-->
         <select ng-switch-when="day" multiple name="{{key}}" class="form-control error success" ng-model="answer.content" ng-options="value for value in field.options" ng-required="field.required"></select>
         <!--month component-->

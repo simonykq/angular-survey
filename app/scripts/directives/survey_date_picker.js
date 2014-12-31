@@ -71,27 +71,32 @@ angular.module('surveyApp')
             e.preventDefault();
             var $this = $(this);
             scope.$apply(function(){
-                setter(scope, $this.val());
-                ngModelCtrl.$setDirty();
-                console.log('dirty');
+                  setter(scope, $this.val());
+                  ngModelCtrl.$setDirty();
             });
         });
 
         ngModelCtrl.$render = function(){
             var viewValue = ngModelCtrl.$viewValue;
             if(angular.isDefined(viewValue) && viewValue !== ''){
-                if(angular.isDate(viewValue)){
-                    var formatedDate = $filter('date')(viewValue, format);
-                    element.find('input').val(formatedDate);
-                    ngModelCtrl.$setValidity('date', true);
-                }else{
-                    console.log(typeof viewValue);
-                    console.log('not a date');
-                    element.find('input').val(viewValue);
-                    ngModelCtrl.$setValidity('date', false);
-                }
+                var formatedDate = $filter('date')(viewValue, format);
+                element.find('input').val(formatedDate);
             }
         };
+
+        var dateValidator = function(value){
+          if(angular.isDate(value) || value === ''){
+            ngModelCtrl.$setValidity('date', true);
+            return value;
+          }else{
+            ngModelCtrl.$setValidity('date', false);
+            return undefined;
+          }
+        };
+
+        ngModelCtrl.$parsers.push(dateValidator);
+        ngModelCtrl.$formatters.unshift(dateValidator);
+
 
         attrs.$observe('format', function(value){
           format = value || 'shortDate';
