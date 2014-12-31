@@ -51,37 +51,28 @@ angular.module('surveyApp')
         if(!ctrl) return;
 
         var ngModelCtrl = ctrl,
-            format      = scope.format || 'shortDate',
-            parsed      = $parse('dateValue'),
-            setter      = parsed.assign;
+            format      = scope.format || 'shortDate';
 
-        scope.$watch(function(){
-          return ngModelCtrl.$viewValue;
-        },function(newVale){
-          setter(scope, newVale);
-        });
-        scope.$watch('dateValue', function(newValue){
-            if(angular.isDefined(newValue)){
-                ngModelCtrl.$setViewValue(newValue);
-                ngModelCtrl.$render();
-            }
+        scope.$watch('dateValue', function(newValue, oldValue){
+            if(newValue === oldValue) return;
+            console.log('datavalue changed');
+            ngModelCtrl.$setViewValue(newValue);
+            ngModelCtrl.$render();
         });
 
         element.find('input').keyup(function(e){
             e.preventDefault();
             var $this = $(this);
             scope.$apply(function(){
-                  setter(scope, $this.val());
+                  ngModelCtrl.$setViewValue($this.val());
                   ngModelCtrl.$setDirty();
             });
         });
 
         ngModelCtrl.$render = function(){
-            var viewValue = ngModelCtrl.$viewValue;
-            if(angular.isDefined(viewValue) && viewValue !== ''){
-                var formatedDate = $filter('date')(viewValue, format);
-                element.find('input').val(formatedDate);
-            }
+            var viewValue = ngModelCtrl.$viewValue,
+                formatedDate = $filter('date')(viewValue, format);
+            element.find('input').val(formatedDate);
         };
 
         var dateValidator = function(value){
