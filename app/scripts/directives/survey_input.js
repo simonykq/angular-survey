@@ -7,127 +7,70 @@
  * # surveyInputs
  */
 
-var DIRECTIVE_TYPES = [
-  'checkbox',
-  'date',
-  'datetime',
-  'day',
-  'month',
-  'multi-select',
-  'radio',
-  'select',
-  'textarea',
-  'time',
-  'week'
-];
-var module = angular.module('surveyApp');
-
-module
-  .directive('surveyInput', function ($compile, $parse, inputTypes) {
+angular.module('surveyApp')
+  .directive('surveyInput', function ($compile, $parse) {
 
     return {
       restrict: 'E',
+      replace: true,
       scope: {
-        field: '=',
-        result: '=binding',
+        field: '=?',
+        result: '=?binding',
         key: '@'
       },
-      link: function postLink(scope, element) {
-
-        try{
-          if(!scope.field){
-            throw new Error('Field model not found on current scope!');
-          }
-          else{
-
-            var field = scope.field,
-                type  = field.type;
-
-            //set up numerable select options
-            if(type === 'month') {
-              field.options = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            }
-            if(type === 'week'){
-              field.options = [1,2,3,4,5,6,7,8,9,10,11,12];
-            }
-            if(type === 'day'){
-              field.options = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
-            }
-
-            if(inputTypes.indexOf(type) !== -1){
-              var compiled;
-              if(DIRECTIVE_TYPES.indexOf(type) !== -1){
-                compiled = $compile('<survey-' + type + '-component></survey-' + type + '-component>')(scope);
+      templateUrl: 'views/_survey_inputs.html',
+      controller: function($scope){
+          try{
+              if(!$scope.field){
+                  throw new Error('Field model not found on current scope!');
               }else{
-                compiled = $compile('<survey-default-component></survey-default-component>')(scope);
+                  var field = $scope.field,
+                      type  = field.type;
+
+                  //set up numerable select options
+                  if(type === 'month') {
+                      field.options = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  }
+                  if(type === 'week'){
+                      field.options = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24];
+                  }
+                  if(type === 'day'){
+                      field.options = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
+                  }
+
+                  //set up the binding to the result where this field input should write to
+                  $scope.answer = {content: ''};
+                  if($scope.result && $scope.key){
+
+                      var ngModelBind   = $parse('result.' + $scope.key),
+                          ngModelAssign = ngModelBind.assign;
+
+                      $scope.$watch('answer.content',function(newValue){
+                          if(newValue){
+                              ngModelAssign($scope, newValue);
+                          }
+                      });
+
+                      $scope.$watch(ngModelBind,
+                          function(newValue){
+                              if(!newValue)
+                                  $scope.answer = {content: ''};
+                          }
+                      );
+
+                      $scope.$on('destroy', function(){
+                          delete $scope.result[$scope.key];
+                      });
+                  }else{
+                      throw new Error('Can not data bind result of input to the form. Check field or key attributes on this directive!');
+                  }
               }
-              element.replaceWith(compiled);
-            }else{
-              scope.field.type = 'text';
-              element.replaceWith($compile('<survey-default-component></survey-default-component>')(scope));
-              throw new Error('Type of input not found! \n Using default component!');
-            }
-
-            //set up the binding to the result where this field input should write to
-            scope.answer = {content: ''};
-            if(scope.result && scope.key){
-
-              scope.$watch('answer.content',function(newValue){
-                if(newValue){
-                  scope.result[scope.key] = newValue;
-                }
-              });
-
-              scope.$watch(
-                function(){
-                  return scope.result[scope.key];
-                },
-                function(newValue){
-                  if(!newValue)
-                    scope.answer = {content: ''};
-                }
-              );
-
-              scope.$on('destroy', function(){
-                delete scope.result[scope.key];
-              });
-            }else{
-              throw new Error('Can not data bind result of input to the form. Check field or key attributes on this directive!');
-            }
-
           }
-        }catch(e){
-          console.error(e.name);
-          console.error(e.message);
-        }
+          catch(e){
+              console.error(e.name);
+              console.error(e.message);
+          }
 
       }
     };
   });
-
-
-module
-  .directive('surveyDefaultComponent', function(){
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: 'views/input_types/default_component.html'
-    }
-  });
-
-angular.forEach(DIRECTIVE_TYPES, function(type){
-  var component_name = 'survey-' + type + '-component';
-  module.directive(camelCase(component_name), function(){
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: 'views/input_types/' + type + '_component.html'
-    }
-  });
-});
-
-function camelCase(input) {
-  return input.toLowerCase().replace(/-(.)/g, function(match, group1) {
-    return group1.toUpperCase();
-  });
-}

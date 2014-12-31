@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-8" ng-switch="field.type">
+        <!--checkbox component-->
+        <label ng-switch-when="checkbox" ng-repeat="option in field.options" >
+            <input type="checkbox" name="{{key}}" checklist-model="answer.content" checklist-value="option.text"> {{option.text}}
+        </label>
+        <!--radio component-->
+        <label ng-switch-when="radio" class="radio-inline" ng-repeat="option in field.options" >
+            <input type="radio" name="{{key}}" ng-model="answer.content" ng-value="option.text" > {{option.text}}
+        </label>
+        <!--date picker component -->
+        <survey-date-picker ng-switch-when="date" format="yyyy/MM/dd" options="{formatYear: 'yy',startingDay: 1}" name="{{key}}" ng-model="answer.content" ng-required="field.required"></survey-date-picker>
+        <!--datetime picker component-->
+        <div ng-switch-when="datetime" class="dropdown">
+            <a class="dropdown-toggle" id="my-toggle-select" role="button" data-toggle="dropdown" data-target="#" href="">
+                <div class="input-group">
+                    <input type="text" name="{{key}}" class="form-control error success" ng-model="answer.content" ng-required="field.required" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                </div>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <datetimepicker ng-model="answer.content" data-datetimepicker-config="{ dropdownSelector: '#my-toggle-select' }"></datetimepicker>
+            </ul>
+        </div>
+        <!--time picker component-->
+        <timepicker ng-switch-when="time" class="form-control error success" ng-model="answer.content" name="{{key}}" ng-required="field.required" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
+        <!--day component-->
+        <select ng-switch-when="day" multiple name="{{key}}" class="form-control error success" ng-model="answer.content" ng-options="value for value in field.options" ng-required="field.required"></select>
+        <!--month component-->
+        <select ng-switch-when="month" multiple name="{{key}}" class="form-control error success" ng-model="answer.content" ng-options="value for value in field.options" ng-required="field.required"></select>
+        <!--week component-->
+        <select ng-switch-when="week" multiple class="form-control error success" name="{{key}}" ng-model="answer.content" ng-required="field.required" ng-options="value as 'Week '+ value for value in field.options"></select>
+        <!--select component-->
+        <select ng-switch-when="select" class="form-control error success" name="{{key}}" ng-model="answer.content" ng-options="value.text as value.text for value in field.options" ng-required="field.required">
+            <option value="">Select one option</option>
+        </select>
+        <!--multi-select component-->
+        <select ng-switch-when="multi-select" multiple name="{{key}}" class="form-control" ng-model="answer.content" ng-options="value.text as value.text for value in field.options"></select>
+        <!--textarea component-->
+        <textarea ng-switch-when="textarea" class="form-control error success" name="{{key}}" ng-model="answer.content" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" rows="3"></textarea>
+        <!--number component-->
+        <input ng-switch-when="number" type="{{field.type}}" name="{{key}}" class="form-control error success" ng-model="answer.content" max="{{field.maxlength}}" min="{{field.minlength}}" ng-required="field.required" />
+        <!--other components-->
+        <input ng-switch-default type="{{field.type}}" name="{{key}}" class="form-control error success" ng-model="answer.content" ng-maxlength="field.maxlength" ng-minlength="field.minlength" ng-required="field.required" />
+    </div>
+</div>

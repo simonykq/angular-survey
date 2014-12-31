@@ -10,7 +10,7 @@ angular.module('surveyApp')
   .directive('surveyDatePicker', function ($compile, $filter, $parse) {
     return {
       templateUrl: 'views/_survey_date_picker.html',
-      replace: true,
+//      replace: true,
       restrict: 'E',
       scope: {
         key: '@',
@@ -61,14 +61,36 @@ angular.module('surveyApp')
           setter(scope, newVale);
         });
         scope.$watch('dateValue', function(newValue){
-            ngModelCtrl.$setViewValue(newValue);
-            ngModelCtrl.$render();
+            if(angular.isDefined(newValue)){
+                ngModelCtrl.$setViewValue(newValue);
+                ngModelCtrl.$render();
+            }
+        });
+
+        element.find('input').keyup(function(e){
+            e.preventDefault();
+            var $this = $(this);
+            scope.$apply(function(){
+                setter(scope, $this.val());
+                ngModelCtrl.$setDirty();
+                console.log('dirty');
+            });
         });
 
         ngModelCtrl.$render = function(){
-           var formatedDate = $filter('date')(ngModelCtrl.$viewValue, format);
-           console.log(formatedDate);
-           element.find('input').val(formatedDate);
+            var viewValue = ngModelCtrl.$viewValue;
+            if(angular.isDefined(viewValue) && viewValue !== ''){
+                if(angular.isDate(viewValue)){
+                    var formatedDate = $filter('date')(viewValue, format);
+                    element.find('input').val(formatedDate);
+                    ngModelCtrl.$setValidity('date', true);
+                }else{
+                    console.log(typeof viewValue);
+                    console.log('not a date');
+                    element.find('input').val(viewValue);
+                    ngModelCtrl.$setValidity('date', false);
+                }
+            }
         };
 
         attrs.$observe('format', function(value){
