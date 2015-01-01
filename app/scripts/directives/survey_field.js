@@ -33,7 +33,21 @@ angular.module('surveyApp')
           };
 
           this.isRangable = function(type){
-            return ['text', 'number', 'email', 'url', 'tel', 'textarea'].indexOf(type) !== -1;
+            return ['text', 'email', 'url', 'tel', 'textarea'].indexOf(type) !== -1;
+          };
+
+          this.isNumerable = function(type){
+            return type === 'number';
+          };
+
+          this.isDatable = function(type){
+            return type === 'date';
+          };
+
+          this.cleanUp = function(shouldClean, field){
+            if(shouldClean){
+              delete this.field[field];
+            }
           }
       }
     };

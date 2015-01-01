@@ -41,7 +41,7 @@
         <!--textarea component-->
         <textarea ng-switch-when="textarea" class="form-control error success" name="{{key}}" ng-model="answer.content" ng-required="field.required" ng-minlength="field.minlength" ng-maxlength="field.maxlength" rows="3"></textarea>
         <!--number component-->
-        <input ng-switch-when="number" type="{{field.type}}" name="{{key}}" class="form-control error success" ng-model="answer.content" max="{{field.maxlength}}" min="{{field.minlength}}" ng-required="field.required" />
+        <input ng-switch-when="number" type="{{field.type}}" name="{{key}}" class="form-control error success" ng-model="answer.content" max="{{field.max}}" min="{{field.min}}" ng-required="field.required" />
         <!--other components-->
         <input ng-switch-default type="{{field.type}}" name="{{key}}" class="form-control error success" ng-model="answer.content" ng-maxlength="field.maxlength" ng-minlength="field.minlength" ng-required="field.required" />
     </div>
