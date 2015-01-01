@@ -20,6 +20,7 @@ angular.module('surveyApp')
             prestineResult(result);
             alert('Submited!');
           }else{
+            //TODO: set all nested fields in this form to $dirty state
             form.$setDirty();
           }
         };

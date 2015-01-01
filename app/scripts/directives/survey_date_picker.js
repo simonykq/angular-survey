@@ -10,7 +10,7 @@ angular.module('surveyApp')
   .directive('surveyDatePicker', function ($compile, $filter, $parse) {
     return {
       templateUrl: 'views/_survey_date_picker.html',
-//      replace: true,
+      replace: true,
       restrict: 'E',
       scope: {
         key: '@',
@@ -71,7 +71,7 @@ angular.module('surveyApp')
 
         ngModelCtrl.$render = function(){
             var viewValue = ngModelCtrl.$viewValue,
-                formatedDate = $filter('date')(viewValue, format);
+            formatedDate = $filter('date')(viewValue, format);
             element.find('input').val(formatedDate);
         };
 

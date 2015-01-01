@@ -26,6 +26,7 @@ angular.module('surveyApp')
             form.$setPristine();
             $location.path('/');
           }else{
+            //TODO: set all nested forms' states to dirty if there is any
             form.$setDirty();
           }
         };
