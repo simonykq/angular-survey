@@ -4,14 +4,14 @@
     <div class="form-group">
         <label for="title">Title</label>
         <input type="text" class="form-control error" id="title" ng-model="data.title" name="title" required />
-        <div ng-if="surveyForm.$dirty" ng-messages="surveyForm.title.$error">
+        <div ng-if="surveyForm.title.$dirty" ng-messages="surveyForm.title.$error">
             <div class="error-text" ng-message="required">is required</div>
         </div>
     </div>
     <div class="form-group">
         <label for="description">Description</label>
         <textarea id="description" class="form-control error" ng-model="data.description" name="description" minlength="100"></textarea>
-        <div ng-if="surveyForm.$dirty" ng-messages="surveyForm.description.$error">
+        <div ng-if="surveyForm.description.$dirty" ng-messages="surveyForm.description.$error">
             <div class="error-text" ng-message="minlength">must be more than 100 characters</div>
         </div>
     </div>

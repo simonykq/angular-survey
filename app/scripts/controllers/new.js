@@ -28,6 +28,7 @@ angular.module('surveyApp')
           }else{
             //TODO: set all nested forms' states to dirty if there is any
             form.$setDirty();
+            dirtyNestedFields(form);
           }
         };
 
@@ -81,6 +82,18 @@ angular.module('surveyApp')
         function addSurvey(data){
           if(data){
             $scope.$parent.surveys.push(angular.copy(data));
+          }
+        }
+
+        function dirtyNestedFields(form){
+          for(var field in form){
+            //check for the nested fields and controls
+            var ctrl = form[field];
+            if (field[0] != '$') {
+              ctrl.$setDirty();
+              //check if this is actually a nested field
+              if(ctrl.hasOwnProperty('$$parentForm')) dirtyNestedFields(ctrl);
+            }
           }
         }
 

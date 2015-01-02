@@ -1,14 +1,15 @@
-<ng-form name="nestedField" class="form-group">
-    <label>Question {{ count }}</label>
+<ng-form name="nestedField_{{count}}" class="form-group">
+    <label>Question {{count}}</label>
     <div class="input-group">
         <input type="text" class="form-control error" name="question" ng-model="field.question" placeholder="Ask your questions" required />
-        <span ng-if="nestedField.$dirty" ng-messages="nestedField.question.$error">
+        <span ng-if="ctrl.isFormDirty('field', 'question')" ng-messages="ctrl.formError('field','question')">
           <span class="error-text" ng-message="required">This field is required</span>
         </span>
+        <br />
         <select class="form-control error" name="type" ng-model="field.type" ng-options="type for type in ctrl.inputTypes" required>
             <option value="">Select the type of input</option>
         </select>
-        <span ng-if="nestedField.$dirty" ng-messages="nestedField.type.$error">
+        <span ng-if="ctrl.isFormDirty('field', 'type')" ng-messages="ctrl.formError('field','type')">
           <span class="error-text" ng-message="required">This field is required</span>
         </span>
         <a class="btn btn-info input-group-addon" ng-click="ctrl.copy(field)">Copy</a>
@@ -16,57 +17,69 @@
     </div>
 </ng-form>
 <br />
-<ng-form name="nestedValidation" class="form-group" ng-if="ctrl.isRequirable(field.type) || ctrl.isRangable(field.type)" >
+<ng-form name="nestedValidation_{{count}}" class="form-group" ng-show="ctrl.isValidable(field.type)" >
   <label>Validations</label>
   <div class="form-inline" ng-if="ctrl.isRequirable(field.type)">
     <input type="checkbox" ng-model="field.required"> Required?
   </div>
   <div class="form-inline" ng-if="ctrl.isRangable(field.type)">
-    <input type="checkbox" ng-model="field.maxlengthReq" ng-change="ctrl.cleanUp(!field.maxlengthReq,'maxlength')"> Maximum character length?
-    <input type="number" class="form-control error" ng-model="field.maxlength" name="maxlength" required ng-if="field.maxlengthReq" >
-    <span ng-if="field.maxlength != null" ng-messages="nestedValidation.maxlength.$error">
-      <span class="error-text" ng-message="required">Required</span>
-      <span class="error-text" ng-message="number">Not a number</span>
+    <input type="checkbox" ng-model="maxlengthReq" ng-change="ctrl.cleanUp(!maxlengthReq,'maxlength')"> Maximum character length?
+    <span ng-if="maxlengthReq">
+      <input type="number" class="form-control error" ng-model="field.maxlength" name="maxlength" required >
+      <span ng-if="ctrl.isFormDirty('validation','maxlength')" ng-messages="ctrl.formError('validation','maxlength')">
+        <span class="error-text" ng-message="required">Required</span>
+        <span class="error-text" ng-message="number">Not a number</span>
+      </span>
     </span>
   </div>
   <div class="form-inline" ng-if="ctrl.isRangable(field.type)">
-    <input type="checkbox" ng-model="field.minlengthReq" ng-change="ctrl.cleanUp(!field.minlengthReq,'minlength')" > Minimum character length?
-    <input type="number" class="form-control error" ng-model="field.minlength" name="minlength" required ng-if="field.minlengthReq" >
-    <span ng-if="field.minlength != null" ng-messages="nestedValidation.minlength.$error">
-      <span class="error-text" ng-message="required">Required</span>
-      <span class="error-text" ng-message="number">Not a number</span>
+    <input type="checkbox" ng-model="minlengthReq" ng-change="ctrl.cleanUp(!minlengthReq,'minlength')" > Minimum character length?
+    <span ng-if="minlengthReq">
+      <input type="number" class="form-control error" ng-model="field.minlength" name="minlength" required >
+      <span ng-if="ctrl.isFormDirty('validation','minlength')" ng-messages="ctrl.formError('validation','minlength')">
+        <span class="error-text" ng-message="required">Required</span>
+        <span class="error-text" ng-message="number">Not a number</span>
+      </span>
     </span>
   </div>
   <div class="form-inline" ng-if="ctrl.isNumerable(field.type)">
-    <input type="checkbox" ng-model="field.maxReq" ng-change="ctrl.cleanUp(!field.maxReq,'max')"> Maximum number?
-    <input type="number" class="form-control error" ng-model="field.max" name="max" required ng-if="field.maxReq" >
-    <span ng-if="field.max != null" ng-messages="nestedValidation.max.$error">
-      <span class="error-text" ng-message="required">Required</span>
-      <span class="error-text" ng-message="number">Not a number</span>
+    <input type="checkbox" ng-model="maxReq" ng-change="ctrl.cleanUp(!maxReq,'max')"> Maximum number?
+    <span ng-if="maxReq">
+      <input type="number" class="form-control error" ng-model="field.max" name="max" required >
+      <span ng-if="ctrl.isFormDirty('validation','max')" ng-messages="ctrl.formError('validation','max')">
+        <span class="error-text" ng-message="required">Required</span>
+        <span class="error-text" ng-message="number">Not a number</span>
+      </span>
     </span>
   </div>
   <div class="form-inline" ng-if="ctrl.isNumerable(field.type)">
-    <input type="checkbox" ng-model="field.minReq" ng-change="ctrl.cleanUp(!field.minReq,'min')" > Minimum number?
-    <input type="number" class="form-control error" ng-model="field.min" name="min" required ng-if="field.minReq" >
-    <span ng-if="field.min != null" ng-messages="nestedValidation.min.$error">
-      <span class="error-text" ng-message="required">Required</span>
-      <span class="error-text" ng-message="number">Not a number</span>
+    <input type="checkbox" ng-model="minReq" ng-change="ctrl.cleanUp(!minReq,'min')" > Minimum number?
+    <span ng-if="minReq">
+      <input type="number" class="form-control error" ng-model="field.min" name="min" required >
+      <span ng-if="ctrl.isFormDirty('validation','min')" ng-messages="ctrl.formError('validation','min')">
+        <span class="error-text" ng-message="required">Required</span>
+        <span class="error-text" ng-message="number">Not a number</span>
+      </span>
     </span>
   </div>
   <div class="form-inline" ng-if="ctrl.isDatable(field.type)">
-    <input type="checkbox" ng-model="field.maxdateReq" ng-change="ctrl.cleanUp(!field.maxdateReq,'maxdate')"> Maximum date?
-    <input type="date" class="form-control error" ng-model="field.maxdate" name="maxdate" required ng-if="field.maxdateReq" >
-    <span ng-if="field.maxdate != null" ng-messages="nestedValidation.maxdate.$error">
-      <span class="error-text" ng-message="required">Required</span>
-      <span class="error-text" ng-message="date">Not a number</span>
+    <input type="checkbox" ng-model="maxdateReq" ng-change="ctrl.cleanUp(!maxdateReq,'maxdate')"> Maximum date?
+    <span ng-if="maxdateReq">
+      <input type="date" class="form-control error" ng-model="field.maxdate" name="maxdate" required >
+      <span ng-if="ctrl.isFormDirty('validation','maxdate')" ng-messages="ctrl.formError('validation','maxdate')">
+        <span class="error-text" ng-message="required">Required</span>
+        <span class="error-text" ng-message="date">Not a number</span>
+      </span>
     </span>
   </div>
   <div class="form-inline" ng-if="ctrl.isDatable(field.type)">
-    <input type="checkbox" ng-model="field.mindateReq" ng-change="ctrl.cleanUp(!field.mindateReq,'mindate')" > Minimum date?
-    <input type="date" class="form-control error" ng-model="field.mindate" name="mindate" required ng-if="field.mindateReq" >
-    <span ng-if="field.mindate != null" ng-messages="nestedValidation.mindate.$error">
-      <span class="error-text" ng-message="required">Required</span>
-      <span class="error-text" ng-message="date">Not a number</span>
+    <input type="checkbox" ng-model="mindateReq" ng-change="ctrl.cleanUp(!mindateReq,'mindate')" > Minimum date?
+    <span ng-if="mindateReq">
+      <input type="date" class="form-control error" ng-model="field.mindate" name="mindate" required >
+      <span ng-if="ctrl.isFormDirty('validation','mindate')" ng-messages="ctrl.formError('validation','mindate')">
+        <span class="error-text" ng-message="required">Required</span>
+        <span class="error-text" ng-message="date">Not a number</span>
+      </span>
     </span>
   </div>
 </ng-form>

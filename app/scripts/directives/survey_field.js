@@ -28,6 +28,10 @@ angular.module('surveyApp')
           this.copy = $scope.copy();
           this.delete = $scope.delete();
 
+          this.isValidable = function(type){
+            return this.isRequirable(type) || this.isRequirable(type) || this.isNumerable(type) || this.isDatable(type);
+          };
+
           this.isRequirable = function(type){
             return ['radio', 'checkbox', 'multi-select',''].indexOf(type) === -1;
           };
@@ -48,7 +52,46 @@ angular.module('surveyApp')
             if(shouldClean){
               delete this.field[field];
             }
+          };
+
+          this.isFormDirty = function(type,prop){
+              var formName;
+              if(type === 'field'){
+                formName = 'nestedField_' + $scope.count;
+                if($scope[formName] && $scope[formName][prop]){
+                  return $scope[formName][prop].$dirty;
+                }else {
+                  return false;
+                }
+              }else{
+                formName = 'nestedValidation_' + $scope.count;
+                if($scope[formName] && $scope[formName][prop]){
+                  return $scope[formName][prop].$dirty;
+                }else{
+                  return false
+                }
+              }
+          };
+
+        this.formError = function(type,prop){
+          var formName;
+          if(type === 'field'){
+            formName = 'nestedField_' + $scope.count;
+            if($scope[formName] && $scope[formName][prop]){
+              return $scope[formName][prop].$error;
+            }else {
+              return null;
+            }
+          }else{
+            formName = 'nestedValidation_' + $scope.count;
+            if($scope[formName] && $scope[formName][prop]){
+              return $scope[formName][prop].$error;
+            }else{
+              return null;
+            }
           }
+        }
+
       }
     };
   });
