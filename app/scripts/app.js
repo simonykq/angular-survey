@@ -22,8 +22,9 @@ angular
     'ui.bootstrap',
     'ui.bootstrap.datetimepicker'
   ])
-  .config(function ($routeProvider,$locationProvider) {
+  .config(function ($routeProvider,$locationProvider,$controllerProvider) {
 
+    $controllerProvider.allowGlobals();
     $locationProvider.html5Mode(true);
     $routeProvider
       .when('/', {

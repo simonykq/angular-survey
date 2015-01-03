@@ -53,8 +53,7 @@ angular.module('surveyApp')
 
                       $scope.$watch(ngModelBind,
                           function(newValue){
-                              if(!newValue)
-                                  $scope.answer = {content: null};
+                              $scope.answer = {content: newValue};
                           }
                       );
 

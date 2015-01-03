@@ -10,7 +10,7 @@ angular.module('surveyApp')
   .directive('surveyDatePicker', function ($compile, $filter, $parse) {
     return {
       templateUrl: 'views/_survey_date_picker.html',
-      replace: true,
+      //replace: true,
       restrict: 'E',
       scope: {
         key: '@',
@@ -55,7 +55,6 @@ angular.module('surveyApp')
 
         scope.$watch('dateValue', function(newValue, oldValue){
             if(newValue === oldValue) return;
-            console.log('datavalue changed');
             ngModelCtrl.$setViewValue(newValue);
             ngModelCtrl.$render();
         });
@@ -76,7 +75,8 @@ angular.module('surveyApp')
         };
 
         var dateValidator = function(value){
-          if(angular.isDate(value) || value === ''){
+          var date = new Date(value);
+          if(!isNaN(date.getTime()) || !value || value === ''){
             ngModelCtrl.$setValidity('date', true);
             return value;
           }else{
@@ -87,7 +87,6 @@ angular.module('surveyApp')
 
         ngModelCtrl.$parsers.push(dateValidator);
         ngModelCtrl.$formatters.unshift(dateValidator);
-
 
         attrs.$observe('format', function(value){
           format = value || 'shortDate';
@@ -121,3 +120,15 @@ angular.module('surveyApp')
       }
     };
   });
+
+
+function datePickerController($scope){
+  $scope.isOpen = false;
+  //this is only used for date component and for some reason, the pop up doesnt show without this
+  $scope.open = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.isOpen = !$scope.isOpen;
+  };
+}
