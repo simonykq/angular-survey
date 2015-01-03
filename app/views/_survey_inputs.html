@@ -9,8 +9,14 @@
             <input type="radio" name="{{key}}" ng-model="answer.content" ng-value="option.text" > {{option.text}}
         </label>
         <!--date picker component -->
-        <survey-date-picker ng-switch-when="date" format="yyyy/MM/dd" options="{formatYear: 'yy',startingDay: 1}" name="{{key}}" ng-model="answer.content" ng-required="field.required"></survey-date-picker>
-        <!--time picker component-->
+        <!--<survey-date-picker ng-switch-when="date" format="yyyy/MM/dd" options="{formatYear: 'yy',startingDay: 1}" name="{{key}}" ng-model="answer.content" ng-required="field.required" date-max="field.maxdate" date-min="field.mindate"></survey-date-picker>-->
+        <p ng-switch-when="date" class="input-group" ng-controller="datePickerController">
+          <input type="text" name="{{key}}" class="form-control error success" datepicker-popup="yyyy/MM/dd" ng-model="answer.content" ng-required="field.required" date-max="field.maxdate" date-min="field.mindate" is-open="isOpen" datepicker-options="{formatYear: 'yy',startingDay: 1}" close-text="Close" />
+          <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+         <!--time picker component-->
         <timepicker ng-switch-when="time" class="error success" ng-model="answer.content" name="{{key}}" ng-required="field.required" hour-step="1" minute-step="15" show-meridian="true"></timepicker>
         <!--datetime picker component-->
         <div ng-switch-when="datetime" class="dropdown">

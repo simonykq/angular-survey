@@ -12,13 +12,6 @@ angular.module('surveyApp')
 
         prestineData();
 
-        $scope.clearForm = function(form, data){
-          if(form.$dirty){
-            form.$setPristine();
-            prestineData(data);
-          }
-        };
-
         $scope.submitForm = function(form, data){
           if(form.$valid){
             addSurvey(data);
@@ -26,19 +19,26 @@ angular.module('surveyApp')
             form.$setPristine();
             $location.path('/');
           }else{
-            //TODO: set all nested forms' states to dirty if there is any
             form.$setDirty();
             dirtyNestedFields(form);
           }
         };
 
-        $scope.addField = function(fields){
-            var field = {
-                question: '',
-                type: ''
-            };
-            fields.push(field)
+        $scope.clearForm = function(form, data){
+          if(form.$dirty){
+            form.$setPristine();
+            prestineData(data);
+          }
         };
+
+
+        $scope.addField = function(fields){
+                var field = {
+                    question: '',
+                    type: ''
+                };
+                fields.push(field)
+            };
 
         $scope.copyField = function(field){
             var newField = {

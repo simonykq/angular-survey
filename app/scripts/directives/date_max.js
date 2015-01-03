@@ -14,24 +14,28 @@ angular.module('surveyApp')
       link: function postLink(scope, element, attrs, ctrls) {
         if(!ctrls[0]) return;
 
-        var ngModel = ctrls[0];
-        ngModel.$validators.maxdate = function(modelValue){
-          if(modelValue === '') return true;  //allow empty string to be valid
+        var dateMax = scope.$eval(attrs.dateMax);
 
-          var value      = scope.$eval(attrs.dateMax),
-              date       = new Date(value),
-              modelDate  = new Date(modelValue);
+        if(!dateMax){
+          return;
+        }else{
+          var ngModel = ctrls[0];
+          ngModel.$validators.maxdate = function(modelValue){
+            var value      = dateMax,
+                date       = new Date(value),
+                modelDate  = new Date(modelValue);
 
-          if(+date > +modelDate){
-            return true;
-          }else{
-            return false;
-          }
-        };
+            if(+date > +modelDate){
+              return true;
+            }else{
+              return false;
+            }
+          };
 
-        attrs.$observe('dateMax', function(){
-          ngModel.$validate();
-        });
+          attrs.$observe('dateMax', function(){
+            ngModel.$validate();
+          });
+        }
       }
     };
   });
