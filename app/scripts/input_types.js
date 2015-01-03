@@ -9,7 +9,7 @@ var TYPES = [
   'url',
   'tel',
   'color',
-  'file',
+  //'file',
   'range',
   'textarea',
   'select',

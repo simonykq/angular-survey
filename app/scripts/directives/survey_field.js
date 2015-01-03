@@ -33,7 +33,7 @@ angular.module('surveyApp')
           };
 
           this.isRequirable = function(type){
-            return ['radio', 'checkbox', 'multi-select',''].indexOf(type) === -1;
+            return ['checkbox',''].indexOf(type) === -1;
           };
 
           this.isRangable = function(type){
@@ -41,7 +41,7 @@ angular.module('surveyApp')
           };
 
           this.isNumerable = function(type){
-            return type === 'number';
+            return ['number','range'].indexOf(type) !== -1;
           };
 
           this.isDatable = function(type){
