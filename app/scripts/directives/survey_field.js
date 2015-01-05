@@ -28,13 +28,70 @@ angular.module('surveyApp')
           this.copy = $scope.copy();
           this.delete = $scope.delete();
 
+          this.isValidable = function(type){
+            return this.isRequirable(type) || this.isRequirable(type) || this.isNumerable(type) || this.isDatable(type);
+          };
+
           this.isRequirable = function(type){
-            return ['radio', 'checkbox', 'multi-select',''].indexOf(type) === -1;
+            return ['checkbox',''].indexOf(type) === -1;
           };
 
           this.isRangable = function(type){
-            return ['text', 'number', 'email', 'url', 'tel', 'textarea'].indexOf(type) !== -1;
+            return ['text', 'email', 'url', 'tel', 'textarea'].indexOf(type) !== -1;
+          };
+
+          this.isNumerable = function(type){
+            return ['number','range'].indexOf(type) !== -1;
+          };
+
+          this.isDatable = function(type){
+            return type === 'date';
+          };
+
+          this.cleanUp = function(shouldClean, field){
+            if(shouldClean){
+              delete this.field[field];
+            }
+          };
+
+          this.isFormDirty = function(type,prop){
+              var formName;
+              if(type === 'field'){
+                formName = 'nestedField_' + $scope.count;
+                if($scope[formName] && $scope[formName][prop]){
+                  return $scope[formName][prop].$dirty;
+                }else {
+                  return false;
+                }
+              }else{
+                formName = 'nestedValidation_' + $scope.count;
+                if($scope[formName] && $scope[formName][prop]){
+                  return $scope[formName][prop].$dirty;
+                }else{
+                  return false
+                }
+              }
+          };
+
+        this.formError = function(type,prop){
+          var formName;
+          if(type === 'field'){
+            formName = 'nestedField_' + $scope.count;
+            if($scope[formName] && $scope[formName][prop]){
+              return $scope[formName][prop].$error;
+            }else {
+              return null;
+            }
+          }else{
+            formName = 'nestedValidation_' + $scope.count;
+            if($scope[formName] && $scope[formName][prop]){
+              return $scope[formName][prop].$error;
+            }else{
+              return null;
+            }
           }
+        }
+
       }
     };
   });

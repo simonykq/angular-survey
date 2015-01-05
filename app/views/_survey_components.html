@@ -17,8 +17,10 @@
                   <span class="error-text" ng-message="email">This is not a valid email</span>
                   <span class="error-text" ng-message="maxlength">Must be no more than {{ field.maxlength }} characters</span>
                   <span class="error-text" ng-message="minlength">Must be at least {{ field.minlength }} characters</span>
-                  <span class="error-text" ng-message="max">Must be less than {{ field.maxlength }}</span>
-                  <span class="error-text" ng-message="min">Must be greater than {{ field.minlength }}</span>
+                  <span class="error-text" ng-message="maxdate">Must before date {{ field.maxdate }}</span>
+                  <span class="error-text" ng-message="mindate">Must after date {{ field.mindate }}</span>
+                  <span class="error-text" ng-message="max">Must be less than {{ field.max }}</span>
+                  <span class="error-text" ng-message="min">Must be greater than {{ field.min }}</span>
                 </span>
               </div>
             </accordion-group>

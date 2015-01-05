@@ -39,7 +39,7 @@ angular.module('surveyApp')
                   }
 
                   //set up the binding to the result where this field input should write to
-                  $scope.answer = {content: ''};
+                  $scope.answer = {content: null};
                   if($scope.result && $scope.key){
 
                       var ngModelBind   = $parse('result.' + $scope.key),
@@ -53,8 +53,7 @@ angular.module('surveyApp')
 
                       $scope.$watch(ngModelBind,
                           function(newValue){
-                              if(!newValue)
-                                  $scope.answer = {content: ''};
+                              $scope.answer = {content: newValue};
                           }
                       );
 

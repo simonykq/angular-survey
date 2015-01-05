@@ -10,7 +10,7 @@ angular.module('surveyApp')
   .directive('surveyDatePicker', function ($compile, $filter, $parse) {
     return {
       templateUrl: 'views/_survey_date_picker.html',
-//      replace: true,
+      //replace: true,
       restrict: 'E',
       scope: {
         key: '@',
@@ -51,47 +51,42 @@ angular.module('surveyApp')
         if(!ctrl) return;
 
         var ngModelCtrl = ctrl,
-            format      = scope.format || 'shortDate',
-            parsed      = $parse('dateValue'),
-            setter      = parsed.assign;
+            format      = scope.format || 'shortDate';
 
-        scope.$watch(function(){
-          return ngModelCtrl.$viewValue;
-        },function(newVale){
-          setter(scope, newVale);
-        });
-        scope.$watch('dateValue', function(newValue){
-            if(angular.isDefined(newValue)){
-                ngModelCtrl.$setViewValue(newValue);
-                ngModelCtrl.$render();
-            }
+        scope.$watch('dateValue', function(newValue, oldValue){
+            if(newValue === oldValue) return;
+            ngModelCtrl.$setViewValue(newValue);
+            ngModelCtrl.$render();
         });
 
         element.find('input').keyup(function(e){
             e.preventDefault();
             var $this = $(this);
             scope.$apply(function(){
-                setter(scope, $this.val());
-                ngModelCtrl.$setDirty();
-                console.log('dirty');
+                  ngModelCtrl.$setViewValue($this.val());
+                  ngModelCtrl.$setDirty();
             });
         });
 
         ngModelCtrl.$render = function(){
-            var viewValue = ngModelCtrl.$viewValue;
-            if(angular.isDefined(viewValue) && viewValue !== ''){
-                if(angular.isDate(viewValue)){
-                    var formatedDate = $filter('date')(viewValue, format);
-                    element.find('input').val(formatedDate);
-                    ngModelCtrl.$setValidity('date', true);
-                }else{
-                    console.log(typeof viewValue);
-                    console.log('not a date');
-                    element.find('input').val(viewValue);
-                    ngModelCtrl.$setValidity('date', false);
-                }
-            }
+            var viewValue = ngModelCtrl.$viewValue,
+            formatedDate = $filter('date')(viewValue, format);
+            element.find('input').val(formatedDate);
         };
+
+        var dateValidator = function(value){
+          var date = new Date(value);
+          if(!isNaN(date.getTime()) || !value || value === ''){
+            ngModelCtrl.$setValidity('date', true);
+            return value;
+          }else{
+            ngModelCtrl.$setValidity('date', false);
+            return undefined;
+          }
+        };
+
+        ngModelCtrl.$parsers.push(dateValidator);
+        ngModelCtrl.$formatters.unshift(dateValidator);
 
         attrs.$observe('format', function(value){
           format = value || 'shortDate';
@@ -125,3 +120,15 @@ angular.module('surveyApp')
       }
     };
   });
+
+
+function datePickerController($scope){
+  $scope.isOpen = false;
+  //this is only used for date component and for some reason, the pop up doesnt show without this
+  $scope.open = function($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.isOpen = !$scope.isOpen;
+  };
+}

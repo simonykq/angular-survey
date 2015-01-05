@@ -12,13 +12,6 @@ angular.module('surveyApp')
 
         prestineData();
 
-        $scope.clearForm = function(form, data){
-          if(form.$dirty){
-            form.$setPristine();
-            prestineData(data);
-          }
-        };
-
         $scope.submitForm = function(form, data){
           if(form.$valid){
             addSurvey(data);
@@ -27,16 +20,25 @@ angular.module('surveyApp')
             $location.path('/');
           }else{
             form.$setDirty();
+            dirtyNestedFields(form);
           }
         };
 
-        $scope.addField = function(fields){
-            var field = {
-                question: '',
-                type: ''
-            };
-            fields.push(field)
+        $scope.clearForm = function(form, data){
+          if(form.$dirty){
+            form.$setPristine();
+            prestineData(data);
+          }
         };
+
+
+        $scope.addField = function(fields){
+                var field = {
+                    question: '',
+                    type: ''
+                };
+                fields.push(field)
+            };
 
         $scope.copyField = function(field){
             var newField = {
@@ -80,6 +82,18 @@ angular.module('surveyApp')
         function addSurvey(data){
           if(data){
             $scope.$parent.surveys.push(angular.copy(data));
+          }
+        }
+
+        function dirtyNestedFields(form){
+          for(var field in form){
+            //check for the nested fields and controls
+            var ctrl = form[field];
+            if (field[0] != '$') {
+              ctrl.$setDirty();
+              //check if this is actually a nested field
+              if(ctrl.hasOwnProperty('$$parentForm')) dirtyNestedFields(ctrl);
+            }
           }
         }
 
