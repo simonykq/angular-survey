@@ -32,6 +32,13 @@
       <div ng-view="">
       </div>
 
+        <!--<div log='some-div'></div>-->
+
+        <!--<div log='parent'>-->
+            <!--<div log='first-child'></div>-->
+            <!--<div log='second-child'></div>-->
+        <!--</div>-->
+
     </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -85,6 +92,7 @@
         <script src="scripts/directives/waiting.js"></script>
         <script src="scripts/directives/survey_date_picker.js"></script>
         <script src="scripts/directives/testing.js"></script>
+        <script src="scripts/directives/log.js"></script>
         <!-- endbuild -->
 
     <script>
@@ -100,8 +108,9 @@
               $injector = angular.injector(modules),
               $compile  = $injector.get('$compile');
 
+          //compile phase
           var compositeLinkFn = $compile($rootElement);
-
+          //link phase
           var $rootScope = $injector.get('$rootScope');
 
           compositeLinkFn($rootScope);
